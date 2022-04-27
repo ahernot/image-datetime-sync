@@ -5,7 +5,11 @@ import subprocess
 from preferences import *
 
 
-def sync_datetime (dirpath: str):
+def sync_datetime (dirpath: str, offset=datetime.timedelta(0, 0, 0)):
+
+    # Default to offset in hours
+    if isinstance(offset, int) or isinstance(offset, float):
+        offset = datetime.timedelta(0, offset * 3600, 0)
 
     with os.scandir( dirpath ) as file_list:
         for file in file_list:
@@ -35,4 +39,4 @@ def sync_datetime (dirpath: str):
 
 
             # Update file atime and mtime
-            os.utime(filepath, (atime, mtime))
+            os.utime(filepath, (atime, mtime + offset))
